@@ -4,8 +4,8 @@ import { Protact } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
-router.post("/", protect, saveResult);
-router.get("/my-results", protect, getUserResults);
+router.post("/", Protact, saveResult);
+router.get("/my-results", Protact, getUserResults);
 router.get("/leaderboard/:category", getLeaderboard);
 
 export default router;
