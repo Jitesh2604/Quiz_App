@@ -3,6 +3,9 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./ConnectDb/mongoDb.js";
 
+import authRoutes from "./Routes/auth.routes.js";
+import resultRoutes from "./Routes/result.routes.js";
+
 dotenv.config();
 
 const app = express();
@@ -11,8 +14,10 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-    res.send("Quiz App");
+    res.send("Quiz App Backend Running");
 });
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, async()=>{
