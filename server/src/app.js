@@ -17,7 +17,8 @@ app.get("/", (req, res) => {
     res.send("Quiz App Backend Running");
 });
 
-
+app.use("/api/auth", authRoutes);
+app.use("/api/results", resultRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, async()=>{
