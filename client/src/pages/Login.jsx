@@ -40,7 +40,7 @@ export function LoginPage() {
                     </div>
                 </form>
                 <p className="text-center text-gray-400">
-                    Don't have an account? <a href="#" className="font-medium text-cyan-400 hover:underline">Sign Up</a>
+                    Don't have an account? <a href="/signup" className="font-medium text-cyan-400 hover:underline">Sign Up</a>
                 </p>
             </div>
         </div>
