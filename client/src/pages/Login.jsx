@@ -1,4 +1,5 @@
 import React from 'react';
+import { MailIcon, LockIcon } from '../components/Icons';
 
 export function LoginPage() {
     return (
