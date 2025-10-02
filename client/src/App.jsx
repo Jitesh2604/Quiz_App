@@ -1,5 +1,5 @@
-import Navbar from "./components/Navbar";
-import { LoginPage, BackgroundEffects } from "./components/Login";
+import Navbar from "./pages/Navbar";
+import { LoginPage, BackgroundEffects } from "./pages/Login";
 
 function App() {
   return (
