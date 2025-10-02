@@ -5,6 +5,7 @@ import connectDB from "./ConnectDb/mongoDb.js";
 
 import authRoutes from "./Routes/auth.routes.js";
 import resultRoutes from "./Routes/result.routes.js";
+import aiRoutes from "./Routes/aiRoutes.js";
 
 dotenv.config();
 
@@ -19,6 +20,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRoutes);
 app.use("/api/results", resultRoutes);
+app.use("/api/ai", aiRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, async()=>{
