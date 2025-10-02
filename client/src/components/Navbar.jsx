@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { BrainIcon, UserIcon } from "../components/Icons";
+import { BrainIcon, UserIcon } from "./Icons";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
