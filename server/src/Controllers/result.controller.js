@@ -33,8 +33,8 @@ export const getUserResults = async (req, res) => {
 
 export const getLeaderboard = async (req, res) => {
     try{
-        const { quizCategory } = req.params;
-        const leaderboard = await Result.find({ quizCategory})
+        const { category } = req.params;
+        const leaderboard = await Result.find({ quizCategory: category })
             .populate("user", "username email")
             .sort({ score: -1 })
             .limit(10);
