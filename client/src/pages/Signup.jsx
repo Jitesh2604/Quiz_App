@@ -1,7 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { UserIcon, MailIcon, LockIcon } from "../components/Icons";
+import API from "../utils/api";
+import { useNavigate } from "react-router-dom";
 
-export default function SignupPage({ onSignup, onNavigate }) {
+export default function SignupPage() {
+  const navigate = useNavigate();
+
+  const [formData, setFromData] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [message, setMessage] = useState("");
+
+  const handleChange = (e) => {
+    setFromData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await API.post("/auth/signup", formData);
+      setMessage("Signup successful! You can login now.");
+      console.log(res.data);
+
+      setTimeout(() => navigate("/login"), 2000);
+    } catch (err) {
+      setMessage(err.response?.data?.message || "Signup failed");
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-[calc(100vh-80px)] animate-fade-in">
       <div className="w-full max-w-md mx-auto p-8 space-y-8 bg-gray-800/60 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-700 transform transition-all duration-500 hover:scale-105">
@@ -9,7 +38,7 @@ export default function SignupPage({ onSignup, onNavigate }) {
           <h2 className="text-4xl font-extrabold text-white">Create Account</h2>
           <p className="mt-2 text-gray-400">Join the QuizWhiz community!</p>
         </div>
-        <form className="space-y-6" onSubmit={onSignup}>
+        <form className="space-y-6" onSubmit={handleSubmit}>
           <div className="relative">
             <div className="absolute top-1/2 left-3 -translate-y-1/2 text-gray-400">
               <UserIcon className="w-5 h-5" />
@@ -18,6 +47,9 @@ export default function SignupPage({ onSignup, onNavigate }) {
               placeholder="Full Name"
               type="text"
               required
+              name="username"
+              value={formData.username}
+              onChange={handleChange}
               className="w-full pl-10 pr-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all"
             />
           </div>
@@ -28,6 +60,9 @@ export default function SignupPage({ onSignup, onNavigate }) {
             <input
               placeholder="you@example.com"
               type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               required
               className="w-full pl-10 pr-4 py-3 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 transition-all"
             />
@@ -37,6 +72,9 @@ export default function SignupPage({ onSignup, onNavigate }) {
               <LockIcon className="w-5 h-5" />
             </div>
             <input
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
               placeholder="••••••••"
               type="password"
               required
@@ -51,11 +89,12 @@ export default function SignupPage({ onSignup, onNavigate }) {
               Create Account
             </button>
           </div>
+          {message && <p className="mt-3 text-center text-sm">{message}</p>}
         </form>
         <p className="text-center text-gray-400">
           Already have an account?{" "}
           <a
-            onClick={() => onNavigate("login")}
+            onClick={() => navigate("/login")}
             className="cursor-pointer font-medium text-cyan-400 hover:underline"
           >
             Login

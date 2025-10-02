@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { MailIcon, LockIcon } from '../components/Icons';
+import API from '../utils/api';
+
 
 export default function LoginPage() {
     return (
