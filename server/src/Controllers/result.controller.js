@@ -8,7 +8,7 @@ export const saveResult = async (req, res) => {
 
         const newResult = new Result({
             user: userId,
-            category,
+            quizCategory,
             score,
             totalQuestions,
             correctAnswers,
