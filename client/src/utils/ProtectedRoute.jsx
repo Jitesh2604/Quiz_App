@@ -8,6 +8,5 @@ export default function ProtectedRoute({ children }) {
     return <Navigate to="/login" replace />;
   }
 
-  // ✅ Logged in → render the page
   return children;
 }
