@@ -14,8 +14,6 @@ export const signup = async (req, res) => {
             return res.status(400).json({ message: "User already exists" });
         };
 
-        const hashPassword = await bcrypt.hash(password, 10);
-
         const user = new User({
             username,
             email,
@@ -44,7 +42,7 @@ export const login = async (req, res) => {
             expiresIn: "7d",
         });
 
-        res.join({
+        res.json({
             token,
             user: { id: user._id, username: user.username, email: user.email, role: user.role }
         });
