@@ -8,9 +8,9 @@ export default function Navbar() {
 
   const navLinks = [
     { to: "/", text: "Home" },
-    { to: "/", text: "Categories" },
-    { to: "/", text: "Leaderboard" },
-    { to: "/", text: "About" },
+    { to: "/categories", text: "Categories" },
+    { to: "/leaderboard", text: "Leaderboard" },
+    { to: "/about", text: "About" },
   ];
 
   return (
