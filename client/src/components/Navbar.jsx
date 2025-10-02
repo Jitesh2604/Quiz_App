@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { BrainIcon, UserIcon } from "./Icons";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -7,9 +8,9 @@ export default function Navbar() {
 
   const navLinks = [
     { to: "/", text: "Home" },
-    { to: "/categories", text: "Categories" },
-    { to: "/leaderboard", text: "Leaderboard" },
-    { to: "/about", text: "About" },
+    { to: "/", text: "Categories" },
+    { to: "/", text: "Leaderboard" },
+    { to: "/", text: "About" },
   ];
 
   return (
