@@ -20,7 +20,7 @@ export default function HomePage({ user, onCategorySelect }) {
     <div className="py-12 animate-fade-in">
       <div className="text-center mb-12">
         <h1 className="text-5xl font-extrabold text-white">
-          Welcome, {user.name}!
+          Welcome, {user?.name || "Guest"}!
         </h1>
         <p className="mt-4 text-lg text-gray-400">
           Choose a category to start your challenge.
