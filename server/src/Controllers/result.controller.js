@@ -2,7 +2,7 @@ import Result from "../models/Result.js";
 
 export const saveResult = async (req, res) => {
     try {
-        const { category, score, totalQuestions, correctAnswers } = req.body;
+        const { quizCategory, score, totalQuestions, correctAnswers } = req.body;
 
         const userId = req.user.id;
 
