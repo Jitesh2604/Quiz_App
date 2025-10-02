@@ -1,4 +1,5 @@
 import React from "react";
+import { BeakerIcon, BookOpenIcon, CpuChipIcon } from "../components/Icons";
 
 export default function HomePage({ user, onCategorySelect }) {
   const categories = [
