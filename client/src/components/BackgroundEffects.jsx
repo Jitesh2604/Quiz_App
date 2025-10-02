@@ -1,6 +1,6 @@
 import React from "react";
 
-export default  const BackgroundEffects = () => {
+export default functionBackgroundEffects = () => {
     return (
         <div className="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
             <div className="absolute top-[10%] left-[5%] w-48 h-48 bg-cyan-500/20 rounded-full animate-pulse blur-2xl"></div>
