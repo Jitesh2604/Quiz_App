@@ -1,5 +1,6 @@
 import React from "react";
 import { TrophyIcon, RefreshCwIcon } from "../components/Icons";
+import CelebrationEffect from "../components/CelebrationEffect";
 
 export default function ResultPage({ result, onPlayAgain, onNavigate }) {
     const { score, total } = result;
