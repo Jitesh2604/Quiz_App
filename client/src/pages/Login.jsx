@@ -1,7 +1,7 @@
 import React from 'react';
 import { MailIcon, LockIcon } from '../components/Icons';
 
-export function LoginPage() {
+export default function LoginPage() {
     return (
         <div className="flex items-center justify-center min-h-[calc(100vh-80px)]">
             <div className="w-full max-w-md mx-auto p-8 space-y-8 bg-gray-800/60 backdrop-blur-xl rounded-2xl shadow-2xl border border-gray-700 transform transition-all duration-500 hover:scale-105">
