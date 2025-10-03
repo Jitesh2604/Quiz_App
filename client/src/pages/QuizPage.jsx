@@ -12,6 +12,10 @@ export default function QuizPage({ onFinishQuiz }) {
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(30);
+
+  const currentQuestion = questions[currentQuestionIndex];
+
 
   useEffect(() => {
     if (questions.length === 0) {
@@ -19,9 +23,20 @@ export default function QuizPage({ onFinishQuiz }) {
     }
   }, [questions, navigate]);
 
-  if (questions.length === 0) return null;
+  useEffect(() => {
+    if(isAnswered) return;
 
-  const currentQuestion = questions[currentQuestionIndex];
+    if(timeLeft === 0) {
+      handleNextQuestion();
+      return;
+    };
+
+    const timer = setTimeout(() => {
+      setTimeLeft((prev) => prev -1);
+    }, 1000);
+    
+    return () => clearTimeout(timer);
+  }, [timeLeft, isAnswered]);
 
   const handleAnswerClick = (option) => {
     if (isAnswered) return;
@@ -37,6 +52,7 @@ export default function QuizPage({ onFinishQuiz }) {
   const handleNextQuestion = () => {
     setIsAnswered(false);
     setSelectedAnswer(null);
+    setTimeLeft(30);
 
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
@@ -59,9 +75,14 @@ export default function QuizPage({ onFinishQuiz }) {
     return "bg-gray-700 opacity-50";
   };
 
+  if (questions.length === 0) return null;
+
   return (
     <div className="max-w-3xl mx-auto py-8 animate-fade-in">
       <div className="bg-gray-800/60 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-gray-700">
+        <div className="mb-4 text-center text-xl font-bold text-yellow-400">
+          Time Left: {timeLeft}s
+        </div>
         <div className="mb-6">
           <p className="text-lg text-gray-400">
             Question {currentQuestionIndex + 1} of {questions.length}
