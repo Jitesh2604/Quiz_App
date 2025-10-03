@@ -22,7 +22,7 @@ export default function LoginPage() {
     try {
       const res = await API.post("/auth/login", formData);
 
-      localStorage.setItem("toekn", res.data.token);
+      localStorage.setItem("token", res.data.token);
 
       setMessage("Login successful! Redirecting...");
       console.log("User logged in:", res.data);
