@@ -10,6 +10,7 @@ export default function HomePage({ user }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
 
   const navigate = useNavigate();
     
@@ -43,6 +44,34 @@ export default function HomePage({ user }) {
     fetchResults();
   }, [user]);
 
+  useEffect(() => {
+      const token = localStorage.getItem("token"); 
+      if (!token) {
+          return;
+      };
+  
+      const fetchUser = async () => {
+        try {
+          const res = await fetch("http://localhost:8000/api/auth/me", {
+            headers: {
+              "Authorization": `Bearer ${token}`,
+            },
+          });
+          if (!res.ok) throw new Error("Failed to fetch user");
+          
+          const data = await res.json();
+          // console.log(data);
+          setCurrentUser(data); 
+        } catch (err) {
+          console.error(err);
+          setCurrentUser(null);
+        } 
+      };
+  
+      fetchUser();
+    }, []);
+  
+
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
     setShowModal(true);
@@ -75,7 +104,7 @@ export default function HomePage({ user }) {
     <div className="py-12 animate-fade-in">
       <div className="text-center mb-12">
         <h1 className="text-5xl font-extrabold text-white">
-          Welcome, {user?.name || "Player"}!
+          Welcome, {currentUser?.username || "Player"}!
         </h1>
         {lastResult ? (
           <p className="mt-4 text-lg text-yellow-400">
