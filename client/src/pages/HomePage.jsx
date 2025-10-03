@@ -2,13 +2,16 @@ import React, { useEffect, useState } from "react";
 import { getCategoryIcon } from "../utils/categoryIcons";
 import { getCategories, getUserResults, getQuestions } from "../utils/api";
 import QuestionCountModal from "../components/QuestionCountModal";
+import { useNavigate } from "react-router-dom";
 
-export default function HomePage({ user, onStartQuiz }) {
+export default function HomePage({ user }) {
   const [categories, setCategories] = useState([]);
   const [lastResult, setLastResult] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
+
+  const navigate = useNavigate();
     
   useEffect(() => {
     const fetchCategories = async () => {
@@ -45,21 +48,24 @@ export default function HomePage({ user, onStartQuiz }) {
     setShowModal(true);
   };
 
-  const handleQuestionSelect = async (count) => {
+  const handleQuestionSelect = async (numQuestions) => {
     if (!selectedCategory) return;
 
     try {
-      const questions = await getQuestions({
+      const response = await getQuestions({
         category: selectedCategory.name,
-        limit: count,
+        limit: numQuestions,
       });
 
-      // Pass questions to QuizPage
-      onStartQuiz(questions, selectedCategory.name);
+      const questions = response?.data || [];
+
+      navigate("/quiz", { state: { questions, categoryName: selectedCategory.name } });
+      // onStartQuiz(questions, selectedCategory.name);
     } catch (err) {
       console.error("Error fetching questions:", err);
+    } finally {
+      setShowModal(false);
     }
-    setShowModal(false);
   };
 
   if (loading) return <div className="text-white text-center mt-20">Loading...</div>;
