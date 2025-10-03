@@ -12,7 +12,14 @@ export default function LeaderboardPage({ currentUser, category }) {
     const fetchLeaderboard = async () => {
       try {
         const { data } = await axios.get(`/api/leaderboard/${category}`);
-        
+        setLeaderboardData(
+          data.map((player, index) => ({
+            rank: index + 1,
+            _id: player.user._id,
+            name: player.user.name,
+            score: player.score,
+            isCurrentUser: player.user._id === currentUser?._id,
+          }))
         );
       } catch (err) {
         console.log("Failed to fetch leaderboard:", err);
@@ -23,8 +30,10 @@ export default function LeaderboardPage({ currentUser, category }) {
     fetchLeaderboard();
   }, [category, currentUser]);
 
-  if (loading) 
-    return <div className="text-white text-center mt-20">Loading leaderboard...</div>;
+  if (loading)
+    return (
+      <div className="text-white text-center mt-20">Loading leaderboard...</div>
+    );
 
   if (leaderboardData.length === 0)
     return <div className="text-white text-center mt-20">No scores yet.</div>;
