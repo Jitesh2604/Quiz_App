@@ -57,9 +57,10 @@ async function callGenerativeAI(prompt) {
 
 export async function generateCategories() {
   const prompt = `
-    Generate 8 fun and diverse quiz categories. 
-    Return them as an array of objects with fields: "name" and "description".
-    Example: [{ "name": "Science", "description": "Explore the wonders of physics and chemistry." }]
+    Generate 12 quiz categories.
+    Return them as an array of objects with fields: "name".
+    Each name should be a simple one-word category like "Science", "History", "Math".
+    Example: [{ "name": "Science" }, { "name": "History" }]
   `;
 
   return await callGenerativeAI(prompt);
