@@ -10,16 +10,17 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (!user) return;
-    
+
     const loadProfile = async () => {
       try {
         // ✅ Fetch current logged-in user details
         const userData = await fetchUser();
+        // console.log("User from fetchUser:", userData);
         setCurrentUser(userData);
 
         // ✅ Fetch this user's quiz results
-        if (userData?.id) {
-          const res = await getUserResults(userData.id);
+        if (userData?._id) {
+          const res = await getUserResults();
           setResults(res);
         }
       } catch (err) {
@@ -30,7 +31,7 @@ export default function ProfilePage() {
     };
 
     loadProfile();
-  }, []);
+  }, [user]);
 
   if (loading) {
     return (

@@ -46,8 +46,8 @@ export const getCategories = async () => {
   // ============================
   // Quiz Results
   // ============================
-  export const getUserResults = async (userId) => {
-    const res = await API.get(`/results/my-results/${userId}`);
+  export const getUserResults = async () => {
+    const res = await API.get(`/results/my-results`);
     return res.data;
   };
   
