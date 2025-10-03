@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function QuizPage({ onFinishQuiz }) {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  const questions = state?.questions || [];
-  const categoryName = state?.categoryName || "Quiz";
+  const questions = useMemo(() => state?.questions || [], [state?.questions]);
+  const categoryName = useMemo(() => state?.categoryName || "Quiz", [state?.categoryName]);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
 
-  // Redirect if no questions (user navigated manually)
   useEffect(() => {
     if (questions.length === 0) {
       navigate("/");
