@@ -1,6 +1,6 @@
 <div align="center">
 <img src="https://www.google.com/search?q=https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Brain.png" alt="Brain" width="120" height="120" />
-<h1>🧠 QuizWhiz</h1>
+<h1>🧠 Brain Teaser</h1>
 <p><strong>The Never-Ending Trivia Engine — Powered by AI</strong></p>
 <p>Where your curiosity meets infinite possibilities. Never play the same quiz twice.</p>
 
