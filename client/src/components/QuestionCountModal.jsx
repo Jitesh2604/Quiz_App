@@ -14,7 +14,7 @@ export default function QuestionCountModal({ category, onStart, onCancel }) {
                 </div>
                 <div className="flex justify-between space-x-4">
                     <button onClick={onCancel} className="w-full py-2 px-4 font-bold text-white bg-gray-600 rounded-lg hover:bg-gray-700 transition-all">Cancel</button>
-                    <button onClick={() => onStart(numQuestions)} className="w-full py-2 px-4 font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all">Start</button>
+                    <button onClick={() => onselect(numQuestions)} className="w-full py-2 px-4 font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg hover:from-cyan-600 hover:to-blue-600 transition-all">Start</button>
                 </div>
             </div>
         </div>

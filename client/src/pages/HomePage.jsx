@@ -110,7 +110,7 @@ export default function HomePage({ user }) {
         <QuestionCountModal
           category={selectedCategory}
           onClose={() => setShowModal(false)}
-          onSelect={handleQuestionSelect}
+          onStart={handleQuestionSelect}
         />
       )}
     </div>
