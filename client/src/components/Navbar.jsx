@@ -1,13 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { BrainIcon, UserIcon } from "./Icons"; // Assuming Icons.js exists
-import API from "../utils/api";
+import { useUser } from "../context/UserContext";
 
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
-  const [loadingUser, setLoadingUser] = useState(true);
+  // const [loadingUser, setLoadingUser] = useState(true);
+
+  const { user, logout } = useUser();
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -38,41 +40,41 @@ export default function Navbar() {
     };
   }, []);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token"); 
-    if (!token) {
-      setLoadingUser(false);
-      return;
-    };
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token"); 
+  //   if (!token) {
+  //     setLoadingUser(false);
+  //     return;
+  //   };
 
-    const fetchUser = async () => {
-      try {
-        const res = await fetch("http://localhost:8000/api/auth/me", {
-          headers: {
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-        if (!res.ok) throw new Error("Failed to fetch user");
+  //   const fetchUser = async () => {
+  //     try {
+  //       const res = await fetch("http://localhost:8000/api/auth/me", {
+  //         headers: {
+  //           "Authorization": `Bearer ${token}`,
+  //         },
+  //       });
+  //       if (!res.ok) throw new Error("Failed to fetch user");
         
-        const data = await res.json();
-        // console.log(data);
-        setCurrentUser(data); 
-      } catch (err) {
-        console.error(err);
-        setCurrentUser(null);
-      } finally {
-        setLoadingUser(false);
-      }
-    };
+  //       const data = await res.json();
+  //       // console.log(data);
+  //       setCurrentUser(data); 
+  //     } catch (err) {
+  //       console.error(err);
+  //       setCurrentUser(null);
+  //     } finally {
+  //       setLoadingUser(false);
+  //     }
+  //   };
 
-    fetchUser();
-  }, []);
+  //   fetchUser();
+  // }, []);
 
 
   
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    logout();
     setCurrentUser(null);
     navigate("/login");
   };
@@ -111,14 +113,14 @@ export default function Navbar() {
             ))}
 
             {/* User Section */}
-            {loadingUser ? null : currentUser ? (
+            {user ?  (
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
                   className="flex items-center space-x-2 bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-full shadow-md transition duration-300"
                 >
                   <UserIcon className="h-5 w-5" />
-                  <span>{currentUser.username}</span>
+                  <span>{user.username}</span>
                 </button>
                 {isUserMenuOpen && (
                   <div className="absolute right-0 mt-2 w-40 bg-gray-800 border border-gray-700 rounded-lg shadow-xl py-2 z-50">
