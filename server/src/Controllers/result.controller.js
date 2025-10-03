@@ -1,4 +1,6 @@
 import Result from "../models/Result.js";
+import User from "../models/User.js";
+
 
 export const saveResult = async (req, res) => {
     try {
@@ -31,10 +33,6 @@ export const getUserResults = async (req, res) => {
     }
 };
 
-// controllers/resultController.js
-
-import Result from "../models/Result.js";
-import User from "../models/User.js";
 
 export const getLeaderboard = async (req, res) => {
   try {
