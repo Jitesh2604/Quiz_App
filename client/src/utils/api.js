@@ -61,6 +61,13 @@ export const getCategories = async () => {
     }
   };
   
-  
+  // ============================
+  // Leaderboard
+  // ============================
+  export const getLeaderboard = async () => {
+    const res = await API.get("/results/leaderboard");
+    return res.data;
+  };
+
 
 export default API;
