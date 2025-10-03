@@ -1,13 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { TrophyIcon } from "../components/Icons";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 
-export default function LeaderboardPage({ currentUser, category }) {
+export default function LeaderboardPage({ currentUser }) {
+  const location = useLocation();
+  const category = location.state?.category;
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!category) return;
+    if (!category) {
+      setLoading(false);
+      return;
+    } 
 
     const fetchLeaderboard = async () => {
       try {

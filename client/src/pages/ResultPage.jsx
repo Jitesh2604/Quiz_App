@@ -3,7 +3,7 @@ import { TrophyIcon, RefreshCwIcon } from "../components/Icons";
 import CelebrationEffect from "../components/CelebrationEffect";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export default function ResultPage() {
+export default function ResultPage({ result }) {
     const { state } = useLocation();
     const navigate = useNavigate();
 
@@ -17,7 +17,8 @@ export default function ResultPage() {
     };
 
     const handleLeaderboard = () => {
-        navigate("/leaderboard");
+        if (!result) return;
+        navigate("/leaderboard", { state: { category: result.category } });
     }
 
     return (
