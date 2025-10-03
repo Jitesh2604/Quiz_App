@@ -10,14 +10,12 @@ import ResultPage from "./pages/ResultPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import AboutPage from "./pages/About";
-import { UserProvider } from "./context/UserContext";
 
 function App() {
   return (
     <div className="min-h-screen bg-gray-900 text-white">
       <BackgroundEffects />
-      <Navbar />
-      <UserProvider>
+        <Navbar />
         <Routes>
           <Route path="/signup" element={<SignupPage />} />
           <Route path="/login" element={<LoginPage />} />
@@ -55,7 +53,6 @@ function App() {
           />
           <Route path="/about" element={<AboutPage />} />
         </Routes>
-      </UserProvider>
     </div>
   );
 }
