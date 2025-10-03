@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect} from "react";
 import jwt_decode from "jwt-decode";
-import User from "../../../server/src/models/User";
 
 const UserContext = createContext();
 
@@ -15,7 +14,7 @@ export const UserProvider = ({ children }) => {
                 const decoded = jwt_decode(token);
                 setUser(decoded);
             } catch (err) {
-                console.log("Invalied token", err);
+                console.log("Invalid token", err);
                 
                 setUser(null);
             }
