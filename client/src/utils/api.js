@@ -35,12 +35,12 @@ export const getCategories = async () => {
   // Quiz Results
   // ============================
   export const getUserResults = async (userId) => {
-    const res = await API.get(`/quiz/results/${userId}`);
+    const res = await API.get(`/results/my-results/${userId}`);
     return res.data;
   };
   
-  export const submitQuiz = async (data) => {
-    const res = await API.post("/quiz/submit", data);
+  export const saveResult = async (data) => {
+    const res = await API.post("/results", data);
     return res.data;
   };
   
