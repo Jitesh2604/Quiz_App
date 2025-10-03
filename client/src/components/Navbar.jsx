@@ -19,7 +19,6 @@ export default function Navbar() {
 
   const navLinks = [
     { to: "/", text: "Home" },
-    { to: "/categories", text: "Categories" },
     { to: "/leaderboard", text: "Leaderboard" },
     { to: "/about", text: "About" },
   ];
