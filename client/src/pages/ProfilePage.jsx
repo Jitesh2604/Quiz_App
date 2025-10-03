@@ -58,7 +58,7 @@ export default function ProfilePage() {
   return (
     <div className="max-w-4xl mx-auto py-12 px-6 text-white">
       {/* --- User Info --- */}
-      <div className="bg-gray-800/70 p-6 rounded-2xl shadow-lg mb-8">
+      <div className="bg-gray-800/70 p-6 rounded-2xl shadow-lg mb-8 hover:scale-105">
         <h2 className="text-3xl font-bold mb-4">Profile</h2>
         <p><span className="font-semibold">Username:</span> {currentUser.username}</p>
         <p><span className="font-semibold">Email:</span> {currentUser.email}</p>
@@ -66,7 +66,7 @@ export default function ProfilePage() {
       </div>
 
       {/* --- Quiz Results --- */}
-      <div className="bg-gray-800/70 p-6 rounded-2xl shadow-lg" onClick={navigate("/all-results")}>
+      <div className="bg-gray-800/70 p-6 rounded-2xl shadow-lg cursor-pointer hover:scale-105" onClick={() => navigate("/all-results")}>
         <h2 className="text-3xl font-bold mb-6">Quiz History</h2>
 
         {!latestResult ? (
