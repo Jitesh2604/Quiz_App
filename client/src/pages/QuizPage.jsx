@@ -62,7 +62,7 @@ export default function QuizPage({ onFinishQuiz }) {
         onFinishQuiz(score, questions.length);
       }
       navigate("/results", {
-        state: { score, total: questions.length, category: categoryName },
+        state: { score, total: questions.length, category: categoryName, userId: curretUser._id },
       });
     }
   };
