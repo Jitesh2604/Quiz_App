@@ -28,7 +28,7 @@ async function callGenerativeAI(prompt) {
     }
 
     const data = await response.json();
-    console.log("Gemini raw response:", JSON.stringify(data, null, 2));
+    // console.log("Gemini raw response:", JSON.stringify(data, null, 2));
 
     if (!data.candidates || !data.candidates[0].content) {
       throw new Error("No candidates returned from Gemini.");

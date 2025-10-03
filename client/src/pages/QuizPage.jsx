@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 export default function QuizPage({ onFinishQuiz }) {
+  const { user } = useUser(); 
   const { state } = useLocation();
   const navigate = useNavigate();
 
@@ -62,7 +64,7 @@ export default function QuizPage({ onFinishQuiz }) {
         onFinishQuiz(score, questions.length);
       }
       navigate("/results", {
-        state: { score, total: questions.length, category: categoryName, userId: curretUser._id },
+        state: { score, total: questions.length, category: categoryName, userId: user._id },
       });
     }
   };

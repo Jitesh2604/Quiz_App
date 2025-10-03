@@ -40,8 +40,13 @@ export const getCategories = async () => {
   };
   
   export const saveResult = async (data) => {
-    const res = await API.post("/results", data);
-    return res.data;
+    try {
+      const res = await API.post("/results", data); // <-- use singular "result"
+      return res.data;
+    } catch (err) {
+      console.error("Error saving result:", err);
+      throw err; // re-throw to handle in component
+    }
   };
   
   
