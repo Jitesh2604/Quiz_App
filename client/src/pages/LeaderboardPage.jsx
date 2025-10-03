@@ -1,20 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { TrophyIcon } from "../components/Icons";
-export default function LeaderboardPage() {
-  const leaderboardData = [
-    { rank: 1, name: "Alice", score: 2450, avatar: "A" },
-    { rank: 2, name: "Bob", score: 2300, avatar: "B" },
-    {
-      rank: 3,
-      name: "Quiz Taker",
-      score: 2100,
-      avatar: "Q",
-      isCurrentUser: true,
-    },
-    { rank: 4, name: "Charlie", score: 2050, avatar: "C" },
-    { rank: 5, name: "David", score: 1900, avatar: "D" },
-    { rank: 6, name: "Eve", score: 1850, avatar: "E" },
-  ];
+import axios from "axios";
+
+export default function LeaderboardPage({ currentUser, category }) {
+  const [leaderboardData, setLeaderboardData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (!category) return;
+
+    const fetchLeaderboard = async () => {
+      try {
+        const { data } = await axios.get(`/api/leaderboard/${category}`);
+        
+        );
+      } catch (err) {
+        console.log("Failed to fetch leaderboard:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchLeaderboard();
+  }, [category, currentUser]);
+
+  if (loading) 
+    return <div className="text-white text-center mt-20">Loading leaderboard...</div>;
+
+  if (leaderboardData.length === 0)
+    return <div className="text-white text-center mt-20">No scores yet.</div>;
 
   return (
     <div className="max-w-2xl mx-auto py-8 animate-fade-in">
@@ -42,7 +55,7 @@ export default function LeaderboardPage() {
                     player.isCurrentUser ? "bg-cyan-500" : "bg-purple-500"
                   }`}
                 >
-                  {player.avatar}
+                  {player.name?.charAt(0).toUpperCase() || "?"}
                 </div>
               </div>
               <div className="w-4/6 pl-4">

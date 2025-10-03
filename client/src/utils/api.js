@@ -44,14 +44,6 @@ export const getCategories = async () => {
     return res.data;
   };
   
-  // ============================
-  // Leaderboard
-  // ============================
-  export const getLeaderboard = async () => {
-    const res = await API.get("/leaderboard");
-    return res.data;
-  };
-  
   
 
 export default API;
