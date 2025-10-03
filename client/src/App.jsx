@@ -11,6 +11,7 @@ import LeaderboardPage from "./pages/LeaderboardPage";
 import ProtectedRoute from "./utils/ProtectedRoute";
 import AboutPage from "./pages/About";
 import ProfilePage from "./pages/ProfilePage";
+import AllResultsPage from "./pages/AllResultsPage";
 
 function App() {
   return (
@@ -57,6 +58,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/all-results"
+            element={
+              <ProtectedRoute>
+                <AllResultsPage />
               </ProtectedRoute>
             }
           />
