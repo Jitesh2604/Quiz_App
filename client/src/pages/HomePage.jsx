@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { getCategoryIcon } from "../utils/categoryIcons";
-import { getCategories, getUserResults, getQuestions } from "../utils/api";
+import {
+  getCategories,
+  getUserResults,
+  getQuestions,
+  fetchUser,
+} from "../utils/api";
 import QuestionCountModal from "../components/QuestionCountModal";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
-export default function HomePage({ user }) {
+export default function HomePage() {
   const [categories, setCategories] = useState([]);
   const [lastResult, setLastResult] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
@@ -12,15 +18,16 @@ export default function HomePage({ user }) {
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState(null);
 
+  const { user } = useUser();
   const navigate = useNavigate();
-    
+
+  // --- Fetch Categories ---
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const catgories = await getCategories();
-        console.log("category res:", catgories);
-        
-        setCategories(catgories);
+        const categoriesData = await getCategories();
+        console.log("category res:", categoriesData);
+        setCategories(categoriesData);
       } catch (error) {
         console.error("Error fetching categories:", error);
       } finally {
@@ -30,6 +37,7 @@ export default function HomePage({ user }) {
     fetchCategories();
   }, []);
 
+  // --- Fetch Last Quiz Result ---
   useEffect(() => {
     const fetchResults = async () => {
       if (user?._id) {
@@ -44,49 +52,40 @@ export default function HomePage({ user }) {
     fetchResults();
   }, [user]);
 
+  // --- Fetch Current User ---
   useEffect(() => {
-      const token = localStorage.getItem("token"); 
-      if (!token) {
-          return;
-      };
-  
-      const fetchUser = async () => {
-        try {
-          const res = await fetch("http://localhost:8000/api/auth/me", {
-            headers: {
-              "Authorization": `Bearer ${token}`,
-            },
-          });
-          if (!res.ok) throw new Error("Failed to fetch user");
-          
-          const data = await res.json();
-          // console.log(data);
-          setCurrentUser(data); 
-        } catch (err) {
-          console.error(err);
-          setCurrentUser(null);
-        } 
-      };
-  
-      fetchUser();
-    }, []);
-  
+    if (!user) return;
 
+    const getUser = async () => {
+      try {
+        const userData = await fetchUser();         
+        setCurrentUser(userData);
+      } catch (err) {
+        console.error("Error fetching user:", err);
+        setCurrentUser(null);
+      }
+    };
+
+    getUser();
+  }, [user]);
+
+  // --- Handle Category Click ---
   const handleCategoryClick = (category) => {
     setSelectedCategory(category);
     setShowModal(true);
   };
 
+  // --- Handle Question Select ---
   const handleQuestionSelect = async (numQuestions, level) => {
     if (!selectedCategory) return;
-  
+
     try {
       const response = await getQuestions({
         category: selectedCategory.name,
         limit: numQuestions,
         level,
       });
-  
+
       const questions = response?.data || [];
       navigate("/quiz", {
         state: { questions, categoryName: selectedCategory.name },
@@ -98,19 +97,22 @@ export default function HomePage({ user }) {
     }
   };
 
-  if (loading) return (
-    <div className="flex flex-col items-center justify-center text-center mt-20 space-y-4">
-      <div className="flex space-x-2" aria-label="Loading">
-        <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-        <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-        <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce"></div>
+  // --- Loading Spinner ---
+  if (loading)
+    return (
+      <div className="flex flex-col items-center justify-center text-center mt-20 space-y-4">
+        <div className="flex space-x-2" aria-label="Loading">
+          <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+          <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+          <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce"></div>
+        </div>
+        <p className="text-white text-lg">
+          Generating Categories with Gemini AI...
+        </p>
       </div>
-      <p className="text-white text-lg">
-        Generating Categories with Gemini AI...
-      </p>
-    </div>
-  );
-  
+    );
+
+  // --- Render ---
   return (
     <div className="py-12 animate-fade-in">
       <div className="text-center mb-12">
@@ -130,8 +132,6 @@ export default function HomePage({ user }) {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {categories.map((category) => {
-          // console.log(category);
-          
           const { Icon, color } = getCategoryIcon(category.name);
           return (
             <div
