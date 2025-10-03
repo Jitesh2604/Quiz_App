@@ -8,14 +8,40 @@ export default function HomePage({ user, onStartQuiz }) {
   const [lastResult, setLastResult] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
+  const parseGeminiCategories = (rawResponse) => {
+    try {
+      const candidates = rawResponse?.candidates;
+      if (!candidates || candidates.length === 0) return [];
+
+      const text = candidates[0].content.parts[0].text;
+      if (!text) return [];
+
+      const cleaned = text.replace(/```json|```/g, "").trim();
+  
+      const categories = JSON.parse(cleaned);
+  
+      return categories; 
+    } catch (error) {
+      console.error("Failed to parse Gemini categories:", error);
+      return [];
+    }
+  };
+  
+  
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await getCategories();
-        setCategories(res);
+        const rawResponse = await getCategories();
+        const parsedcategories = parseGeminiCategories(rawResponse)
+        console.log("category res:", parsedcategories);
+        
+        setCategories(parsedcategories);
       } catch (error) {
         console.error("Error fetching categories:", error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchCategories();
@@ -57,6 +83,8 @@ export default function HomePage({ user, onStartQuiz }) {
     setShowModal(false);
   };
 
+  if (loading) return <div className="text-white text-center mt-20">Loading...</div>;
+
   return (
     <div className="py-12 animate-fade-in">
       <div className="text-center mb-12">
@@ -76,6 +104,8 @@ export default function HomePage({ user, onStartQuiz }) {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {categories.map((category) => {
+          console.log(category);
+          
           const { Icon, color } = getCategoryIcon(category.name);
           return (
             <div
