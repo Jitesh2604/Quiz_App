@@ -66,8 +66,8 @@ export default function Navbar() {
               onClick={closeAllMenus}
             >
               <BrainIcon className="h-10 w-10 text-cyan-400 animate-pulse" />
-              <span className="text-2xl font-bold text-white tracking-wider">
-                QuizWhiz
+              <span className="text-2xl font-bold text-purple-800 tracking-wider ">
+                Brain Teaser
               </span>
             </Link>
           </div>
