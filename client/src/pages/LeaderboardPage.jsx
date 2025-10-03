@@ -1,40 +1,34 @@
 import React, { useEffect, useState } from "react";
 import { TrophyIcon } from "../components/Icons";
-import { useLocation } from "react-router-dom";
-import axios from "axios";
+import { getLeaderboard } from "../utils/api"
 
 export default function LeaderboardPage({ currentUser }) {
-  const location = useLocation();
-  const category = location.state?.category;
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!category) {
-      setLoading(false);
-      return;
-    } 
-
     const fetchLeaderboard = async () => {
       try {
-        const { data } = await axios.get(`/api/leaderboard/${category}`);
+        const data = await getLeaderboard(); 
         setLeaderboardData(
           data.map((player, index) => ({
             rank: index + 1,
-            _id: player.user._id,
-            name: player.user.name,
-            score: player.score,
-            isCurrentUser: player.user._id === currentUser?._id,
+            _id: player.userId,
+            name: player.username,
+            score: player.totalScore,
+            attempts: player.attempts,
+            isCurrentUser: player.userId === currentUser?._id,
           }))
         );
       } catch (err) {
-        console.log("Failed to fetch leaderboard:", err);
+        console.error("Failed to fetch leaderboard:", err);
       } finally {
         setLoading(false);
       }
     };
     fetchLeaderboard();
-  }, [category, currentUser]);
+  }, [currentUser]);
+
 
   if (loading)
     return (
@@ -47,10 +41,13 @@ export default function LeaderboardPage({ currentUser }) {
   return (
     <div className="max-w-2xl mx-auto py-8 animate-fade-in">
       <div className="bg-gray-800/60 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-gray-700">
+        {/* Header */}
         <div className="flex items-center justify-center mb-6">
           <TrophyIcon className="w-10 h-10 text-yellow-400 mr-4" />
           <h1 className="text-4xl font-extrabold text-white">Leaderboard</h1>
         </div>
+
+        {/* Leaderboard List */}
         <div className="space-y-4">
           {leaderboardData.map((player) => (
             <div
@@ -61,6 +58,7 @@ export default function LeaderboardPage({ currentUser }) {
                   : "bg-gray-700/50"
               }`}
             >
+              {/* Rank + Avatar */}
               <div className="flex items-center w-1/6">
                 <span className="text-2xl font-bold text-gray-400 mr-4">
                   {player.rank}
@@ -73,10 +71,17 @@ export default function LeaderboardPage({ currentUser }) {
                   {player.name?.charAt(0).toUpperCase() || "?"}
                 </div>
               </div>
-              <div className="w-4/6 pl-4">
+
+              {/* Username */}
+              <div className="w-3/6 pl-4">
                 <p className="font-bold text-lg">{player.name}</p>
+                <p className="text-xs text-gray-400">
+                  Attempts: {player.attempts}
+                </p>
               </div>
-              <div className="w-1/6 text-right">
+
+              {/* Score */}
+              <div className="w-2/6 text-right">
                 <p className="font-bold text-xl text-yellow-400">
                   {player.score}
                 </p>
