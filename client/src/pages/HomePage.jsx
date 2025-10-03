@@ -54,8 +54,8 @@ export default function HomePage({ user }) {
     try {
       const response = await getQuestions({
         category: selectedCategory.name,
-        count: numQuestions,
-        level: level,
+        limit: numQuestions,
+        level,
       });
   
       const questions = response?.data || [];
