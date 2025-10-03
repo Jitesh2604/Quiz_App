@@ -19,7 +19,7 @@ API.interceptors.request.use((config) => {
 // Categories
 // ============================
 export const getCategories = async () => {
-    const res = await API.get("/categories");
+    const res = await API.get("/ai/categories");
     return res.data;
   };
   
@@ -27,7 +27,7 @@ export const getCategories = async () => {
   // Questions
   // ============================
   export const getQuestions = async ({ category, limit }) => {
-    const res = await API.post("/questions", { category, limit });
+    const res = await API.post("/ai/questions", { category, limit });
     return res.data;
   };
   
