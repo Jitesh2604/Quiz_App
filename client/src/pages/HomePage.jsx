@@ -1,4 +1,3 @@
-// HomePage.jsx
 import React, { useEffect, useState } from "react";
 import { getCategoryIcon } from "../utils/categoryIcons";
 import { getCategories, getUserResults, getQuestions } from "../utils/api";
