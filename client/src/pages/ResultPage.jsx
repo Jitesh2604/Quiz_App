@@ -1,12 +1,24 @@
 import React from "react";
 import { TrophyIcon, RefreshCwIcon } from "../components/Icons";
 import CelebrationEffect from "../components/CelebrationEffect";
+import { useLocation, useNavigate } from "react-router-dom";
 
-export default function ResultPage({ result, onPlayAgain, onNavigate }) {
-    const { score, total } = result;
-    const percentage = Math.round((score / total) * 100);
+export default function ResultPage() {
+    const { state } = useLocation();
+    const navigate = useNavigate();
+
+    const { score = 0, total = 0 } = state || {};
+    const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
     const isPass = percentage >= 60;
     const strokeDashoffset = 283 - (283 * percentage) / 100;
+
+    const handlePlayAgain = () => {
+        navigate("/", { replace: true });
+    };
+
+    const handleLeaderboard = () => {
+        navigate("/leaderboard");
+    }
 
     return (
         <div className="relative flex flex-col items-center justify-center min-h-[calc(100vh-160px)] text-center animate-fade-in">
@@ -37,11 +49,11 @@ export default function ResultPage({ result, onPlayAgain, onNavigate }) {
                 </div>
 
                 <div className="flex flex-col md:flex-row gap-4">
-                    <button onClick={onPlayAgain} className="w-full flex items-center justify-center gap-2 py-3 px-4 font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg hover:from-cyan-600 hover:to-blue-600 transform hover:-translate-y-1 transition-all duration-300">
+                    <button onClick={handlePlayAgain} className="w-full flex items-center justify-center gap-2 py-3 px-4 font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg hover:from-cyan-600 hover:to-blue-600 transform hover:-translate-y-1 transition-all duration-300">
                         <RefreshCwIcon className="w-5 h-5"/>
                         {isPass ? "Play Another Quiz" : "Try Again"}
                     </button>
-                    <button onClick={() => onNavigate('leaderboard')} className="w-full flex items-center justify-center gap-2 py-3 px-4 font-bold text-white bg-gray-600 rounded-lg hover:bg-gray-700 transition-all">
+                    <button onClick={handleLeaderboard} className="w-full flex items-center justify-center gap-2 py-3 px-4 font-bold text-white bg-gray-600 rounded-lg hover:bg-gray-700 transition-all">
                         <TrophyIcon className="w-5 h-5"/>
                         View Leaderboard
                     </button>
