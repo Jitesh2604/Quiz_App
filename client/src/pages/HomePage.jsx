@@ -48,19 +48,20 @@ export default function HomePage({ user }) {
     setShowModal(true);
   };
 
-  const handleQuestionSelect = async (numQuestions) => {
+  const handleQuestionSelect = async (numQuestions, level) => {
     if (!selectedCategory) return;
-
+  
     try {
       const response = await getQuestions({
         category: selectedCategory.name,
-        limit: numQuestions,
+        count: numQuestions,
+        level: level,
       });
-
+  
       const questions = response?.data || [];
-
-      navigate("/quiz", { state: { questions, categoryName: selectedCategory.name } });
-      // onStartQuiz(questions, selectedCategory.name);
+      navigate("/quiz", {
+        state: { questions, categoryName: selectedCategory.name },
+      });
     } catch (err) {
       console.error("Error fetching questions:", err);
     } finally {
