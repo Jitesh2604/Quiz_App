@@ -27,7 +27,7 @@ export const getCategories = async () => {
   // Questions
   // ============================
   export const getQuestions = async ({ category, limit }) => {
-    const res = await API.post("/ai/questions", { category, limit });
+    const res = await API.post("/ai/questions", { category, count: limit });
     return res.data;
   };
   
