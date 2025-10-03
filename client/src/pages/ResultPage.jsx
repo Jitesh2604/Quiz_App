@@ -3,11 +3,11 @@ import { TrophyIcon, RefreshCwIcon } from "../components/Icons";
 import CelebrationEffect from "../components/CelebrationEffect";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export default function ResultPage({ result }) {
+export default function ResultPage() {
     const { state } = useLocation();
     const navigate = useNavigate();
 
-    const { score = 0, total = 0 } = state || {};
+    const { score = 0, total = 0, category = "Quiz" } = state || {};
     const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
     const isPass = percentage >= 60;
     const strokeDashoffset = 283 - (283 * percentage) / 100;
@@ -17,8 +17,7 @@ export default function ResultPage({ result }) {
     };
 
     const handleLeaderboard = () => {
-        if (!result) return;
-        navigate("/leaderboard", { state: { category: result.category } });
+        navigate("/leaderboard", { state: { category } });
     }
 
     return (
