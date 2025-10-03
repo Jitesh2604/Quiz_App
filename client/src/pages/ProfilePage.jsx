@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import { useUser } from "../context/UserContext";
 import { fetchUser, getUserResults } from "../utils/api";
 
 export default function ProfilePage() {
+  const navigate = useNavigate();  
   const { user } = useUser(); 
   const [currentUser, setCurrentUser] = useState(null);
   const [results, setResults] = useState([]);
@@ -21,6 +23,8 @@ export default function ProfilePage() {
         // ✅ Fetch this user's quiz results
         if (userData?._id) {
           const res = await getUserResults();
+          console.log(res);
+          
           setResults(res);
         }
       } catch (err) {
@@ -49,6 +53,8 @@ export default function ProfilePage() {
     );
   }
 
+  const latestResult = results.length > 0 ? results[0] : null;
+
   return (
     <div className="max-w-4xl mx-auto py-12 px-6 text-white">
       {/* --- User Info --- */}
@@ -60,10 +66,10 @@ export default function ProfilePage() {
       </div>
 
       {/* --- Quiz Results --- */}
-      <div className="bg-gray-800/70 p-6 rounded-2xl shadow-lg">
+      <div className="bg-gray-800/70 p-6 rounded-2xl shadow-lg" onClick={navigate("/all-results")}>
         <h2 className="text-3xl font-bold mb-6">Quiz History</h2>
 
-        {results.length === 0 ? (
+        {!latestResult ? (
           <p className="text-gray-400">No quiz attempts yet.</p>
         ) : (
           <div className="overflow-x-auto">
@@ -78,17 +84,15 @@ export default function ProfilePage() {
                 </tr>
               </thead>
               <tbody>
-                {results.map((r, idx) => (
-                  <tr key={idx} className="border-t border-gray-700 hover:bg-gray-700/40">
-                    <td className="px-4 py-2">{r.quizCategory}</td>
-                    <td className="px-4 py-2 font-bold">{r.score}</td>
-                    <td className="px-4 py-2">{r.correctAnswers}</td>
-                    <td className="px-4 py-2">{r.totalQuestions}</td>
+                  <tr  className="border-t border-gray-700 hover:bg-gray-700/40">
+                    <td className="px-4 py-2">{latestResult.quizCategory}</td>
+                    <td className="px-4 py-2 font-bold">{latestResult.score}</td>
+                    <td className="px-4 py-2">{latestResult.correctAnswers}</td>
+                    <td className="px-4 py-2">{latestResult.totalQuestions}</td>
                     <td className="px-4 py-2">
-                      {new Date(r.createdAt).toLocaleDateString()}
+                      {new Date(latestResult.createdAt).toLocaleDateString()}
                     </td>
                   </tr>
-                ))}
               </tbody>
             </table>
           </div>
