@@ -6,6 +6,8 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/Login";
 import SignupPage from "./pages/Signup";
 import QuizPage from "./pages/QuizPage";
+import ResultPage from "./pages/ResultPage";
+import LeaderboardPage from "./pages/LeaderboardPage";
 import ProtectedRoute from "./utils/ProtectedRoute";
 
 function App() {
