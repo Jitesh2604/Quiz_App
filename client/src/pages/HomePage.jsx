@@ -9,35 +9,14 @@ export default function HomePage({ user, onStartQuiz }) {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const parseGeminiCategories = (rawResponse) => {
-    try {
-      const candidates = rawResponse?.candidates;
-      if (!candidates || candidates.length === 0) return [];
-
-      const text = candidates[0].content.parts[0].text;
-      if (!text) return [];
-
-      const cleaned = text.replace(/```json|```/g, "").trim();
-  
-      const categories = JSON.parse(cleaned);
-  
-      return categories; 
-    } catch (error) {
-      console.error("Failed to parse Gemini categories:", error);
-      return [];
-    }
-  };
-  
-  
+    
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const rawResponse = await getCategories();
-        const parsedcategories = parseGeminiCategories(rawResponse)
-        console.log("category res:", parsedcategories);
+        const catgories = await getCategories();
+        console.log("category res:", catgories);
         
-        setCategories(parsedcategories);
+        setCategories(catgories);
       } catch (error) {
         console.error("Error fetching categories:", error);
       } finally {
@@ -104,7 +83,7 @@ export default function HomePage({ user, onStartQuiz }) {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {categories.map((category) => {
-          console.log(category);
+          // console.log(category);
           
           const { Icon, color } = getCategoryIcon(category.name);
           return (
@@ -115,6 +94,7 @@ export default function HomePage({ user, onStartQuiz }) {
             >
               <Icon className={`h-16 w-16 mx-auto mb-4 ${color}`} />
               <h3 className="text-2xl font-bold text-white">{category.name}</h3>
+              <p className="text-gray-400 mt-2">{category.description}</p>
             </div>
           );
         })}
