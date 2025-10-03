@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect} from "react";
-import * as jwtDecode from "jwt-decode";
+// The fix is on the next line:
+import { jwtDecode } from "jwt-decode"; 
 
 const UserContext = createContext();
 
@@ -8,18 +9,25 @@ export const UserProvider = ({ children }) => {
 
     useEffect(() => {
         const token = localStorage.getItem("token");
-
-        if(token) {
-            try {
-                const decoded = jwtDecode.default(token);
-                setUser(decoded);
-            } catch (err) {
-                console.log("Invalid token", err);
-                
-                setUser(null);
+    
+        if (token) {
+          try {
+            const decoded = jwtDecode(token); 
+            // Optional: Check if the token is expired
+            if (Date.now() >= decoded.exp * 1000) {
+              console.log("Token expired");
+              localStorage.removeItem("token");
+              setUser(null);
+            } else {
+              setUser(decoded);
             }
+          } catch (err) {
+            console.log("Invalid token", err);
+            localStorage.removeItem("token");
+            setUser(null);
+          }
         }
-    }, []);
+      }, []);
 
     const logout = () => {
         localStorage.removeItem("token");
