@@ -194,3 +194,136 @@ export const RefreshCwIcon = ({ className }) => (
     <path d="M3 21v-5h5" />
   </svg>
 );
+export const GlobeIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    {...props}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 21a9 9 0 100-18 9 9 0 000 18z"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 3.75c-3.142 0-6 2.553-6 5.714 0 3.14 2.858 5.715 6 5.715s6-2.575 6-5.715c0-3.16-2.858-5.714-6-5.714zM12 12.75c-3.142 0-6 2.553-6 5.714 0 3.14 2.858 5.715 6 5.715s6-2.575 6-5.715c0-3.16-2.858-5.714-6-5.714z"
+    />
+  </svg>
+);
+
+export const FilmIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    {...props}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M6 3v18M18 3v18M3 6h18M3 18h18M7.5 3h9M7.5 21h9M3 9h1.5m15 0H21M3 15h1.5m15 0H21"
+    />
+  </svg>
+);
+
+export const MusicNoteIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    {...props}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M9 9l10.5-3m0 6.553v3.75a2.25 2.25 0 01-2.25 2.25H15a2.25 2.25 0 01-2.25-2.25v-3.75m0-6.553l-3-1.5m3 1.5V9"
+    />
+  </svg>
+);
+
+export const PaintBrushIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    {...props}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M9.53 16.122a3 3 0 00-5.78 1.128 2.25 2.25 0 01-2.475 2.118L3.75 14.25M9.53 16.122a3 3 0 004.242 0l4.242-4.242a3 3 0 000-4.242L10.97 4.5a3 3 0 00-4.242 0z"
+    />
+  </svg>
+);
+
+export const PawIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    {...props}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M9 9.563C9 9.254 9.254 9 9.563 9h4.874c.309 0 .563.254.563.563v4.874c0 .309-.254.563-.563.563H9.563C9.254 15 9 14.746 9 14.437V9.563z"
+    />
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M11.25 11.25a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z"
+    />
+  </svg>
+);
+
+export const FoodIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    {...props}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M12 6v12m-3-6h6m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+    />
+  </svg>
+);
+
+export const QuestionMarkIcon = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    viewBox="0 0 24 24"
+    strokeWidth={1.5}
+    stroke="currentColor"
+    {...props}
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"
+    />
+  </svg>
+);
