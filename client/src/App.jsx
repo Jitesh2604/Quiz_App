@@ -9,6 +9,7 @@ import QuizPage from "./pages/QuizPage";
 import ResultPage from "./pages/ResultPage";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import ProtectedRoute from "./utils/ProtectedRoute";
+import AboutPage from "./pages/About";
 
 function App() {
   return (
@@ -50,6 +51,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/about" element={<AboutPage />} />
       </Routes>
     </div>
   );
