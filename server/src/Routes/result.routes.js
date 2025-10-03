@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.post("/", protect, saveResult);
 router.get("/my-results", protect, getUserResults);
-router.get("/leaderboard/:category", getLeaderboard);
+router.get("/leaderboard", getLeaderboard);
 
 export default router;
