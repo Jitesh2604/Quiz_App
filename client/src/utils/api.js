@@ -16,6 +16,18 @@ API.interceptors.request.use((config) => {
 });
 
 // ============================
+// Auth
+// ============================
+export const fetchUser = async () => {
+  try {
+    const res = await API.get("/auth/me");
+    return res.data; 
+  } catch (err) {
+    console.error("Error fetching user:", err);
+    throw err;
+  }
+};
+// ============================
 // Categories
 // ============================
 export const getCategories = async () => {
