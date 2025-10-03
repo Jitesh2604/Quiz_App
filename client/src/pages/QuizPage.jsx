@@ -4,12 +4,15 @@ import { useUser } from "../context/UserContext";
 import { saveResult } from "../utils/api";
 
 export default function QuizPage({ onFinishQuiz }) {
-  const { user } = useUser(); 
+  const { user } = useUser();
   const { state } = useLocation();
   const navigate = useNavigate();
 
   const questions = useMemo(() => state?.questions || [], [state?.questions]);
-  const categoryName = useMemo(() => state?.categoryName || "Quiz", [state?.categoryName]);
+  const categoryName = useMemo(
+    () => state?.categoryName || "Quiz",
+    [state?.categoryName]
+  );
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -19,7 +22,6 @@ export default function QuizPage({ onFinishQuiz }) {
 
   const currentQuestion = questions[currentQuestionIndex];
 
-
   useEffect(() => {
     if (questions.length === 0) {
       navigate("/");
@@ -27,17 +29,17 @@ export default function QuizPage({ onFinishQuiz }) {
   }, [questions, navigate]);
 
   useEffect(() => {
-    if(isAnswered) return;
+    if (isAnswered) return;
 
-    if(timeLeft === 0) {
+    if (timeLeft === 0) {
       handleNextQuestion();
       return;
-    };
+    }
 
     const timer = setTimeout(() => {
-      setTimeLeft((prev) => prev -1);
+      setTimeLeft((prev) => prev - 1);
     }, 1000);
-    
+
     return () => clearTimeout(timer);
   }, [timeLeft, isAnswered]);
 
@@ -52,7 +54,7 @@ export default function QuizPage({ onFinishQuiz }) {
     }
   };
 
-  const handleNextQuestion = async() => {
+  const handleNextQuestion = async () => {
     setIsAnswered(false);
     setSelectedAnswer(null);
     setTimeLeft(30);
@@ -60,27 +62,32 @@ export default function QuizPage({ onFinishQuiz }) {
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
       return;
-    } 
+    }
 
-    if(user) {
+    if (user) {
+      // console.log(user);
       try {
         await saveResult({
-          user: user._id,
+          user: user.id,
           quizCategory: categoryName,
-          score,
+          score: score,
           totalQuestions: questions.length,
-          correctAnswer: score,
+          correctAnswers: score,
         });
       } catch (err) {
         console.log("Error saving result:", err);
       }
-    };
+    }
 
     if (onFinishQuiz) onFinishQuiz(score, questions.length);
 
-
     navigate("/results", {
-      state: { score, total: questions.length, category: categoryName, userId: user._id },
+      state: {
+        score,
+        total: questions.length,
+        category: categoryName,
+        userId: user._id,
+      },
     });
   };
 
