@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
+import { saveResult } from "../utils/api";
 
 export default function QuizPage({ onFinishQuiz }) {
   const { user } = useUser(); 
@@ -51,22 +52,36 @@ export default function QuizPage({ onFinishQuiz }) {
     }
   };
 
-  const handleNextQuestion = () => {
+  const handleNextQuestion = async() => {
     setIsAnswered(false);
     setSelectedAnswer(null);
     setTimeLeft(30);
 
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex((prev) => prev + 1);
-    } else {
-      // Quiz finished
-      if (onFinishQuiz) {
-        onFinishQuiz(score, questions.length);
+      return;
+    } 
+
+    if(user) {
+      try {
+        await saveResult({
+          user: user._id,
+          quizCategory: categoryName,
+          score,
+          totalQuestions: questions.length,
+          correctAnswer: score,
+        });
+      } catch (err) {
+        console.log("Error saving result:", err);
       }
-      navigate("/results", {
-        state: { score, total: questions.length, category: categoryName, userId: user._id },
-      });
-    }
+    };
+
+    if (onFinishQuiz) onFinishQuiz(score, questions.length);
+
+
+    navigate("/results", {
+      state: { score, total: questions.length, category: categoryName, userId: user._id },
+    });
   };
 
   const getButtonClass = (option) => {
