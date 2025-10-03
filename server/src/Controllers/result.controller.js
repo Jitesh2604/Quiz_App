@@ -31,17 +31,51 @@ export const getUserResults = async (req, res) => {
     }
 };
 
-export const getLeaderboard = async (req, res) => {
-    try{
-        const { category } = req.params;
-        const leaderboard = await Result.find({ quizCategory: category })
-            .populate("user", "username email")
-            .sort({ score: -1 })
-            .limit(10);
+// controllers/resultController.js
 
-        res.json(leaderboard);
-    }catch(err){
-        res.status(500).json({ message: "Error fetching leaderboard", err });
-    }
+import Result from "../models/Result.js";
+import User from "../models/User.js";
+
+export const getLeaderboard = async (req, res) => {
+  try {
+    const leaderboard = await Result.aggregate([
+      {
+        $group: {
+          _id: "$user", 
+          totalScore: { $sum: "$score" }, 
+          attempts: { $sum: 1 }, 
+        },
+      },
+      {
+        $lookup: {
+          from: "users", 
+          localField: "_id",
+          foreignField: "_id",
+          as: "userInfo",
+        },
+      },
+      {
+        $unwind: "$userInfo",
+      },
+      {
+        $project: {
+          _id: 0,
+          userId: "$userInfo._id",
+          username: "$userInfo.username",
+          email: "$userInfo.email",
+          totalScore: 1,
+          attempts: 1,
+        },
+      },
+      { $sort: { totalScore: -1 } }, 
+      { $limit: 20 }, // top 20
+    ]);
+
+    res.json(leaderboard);
+  } catch (err) {
+    console.error("Error fetching leaderboard:", err);
+    res.status(500).json({ message: "Error fetching leaderboard" });
+  }
 };
+
 
