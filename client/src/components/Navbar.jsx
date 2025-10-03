@@ -6,7 +6,7 @@ import { useUser } from "../context/UserContext";
 export default function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
+  // const [currentUser, setCurrentUser] = useState(null);
   // const [loadingUser, setLoadingUser] = useState(true);
 
   const { user, logout } = useUser();
@@ -30,7 +30,10 @@ export default function Navbar() {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setIsUserMenuOpen(false);
       }
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target)) {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target)
+      ) {
         setIsMobileMenuOpen(false);
       }
     };
@@ -40,42 +43,9 @@ export default function Navbar() {
     };
   }, []);
 
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token"); 
-  //   if (!token) {
-  //     setLoadingUser(false);
-  //     return;
-  //   };
-
-  //   const fetchUser = async () => {
-  //     try {
-  //       const res = await fetch("http://localhost:8000/api/auth/me", {
-  //         headers: {
-  //           "Authorization": `Bearer ${token}`,
-  //         },
-  //       });
-  //       if (!res.ok) throw new Error("Failed to fetch user");
-        
-  //       const data = await res.json();
-  //       // console.log(data);
-  //       setCurrentUser(data); 
-  //     } catch (err) {
-  //       console.error(err);
-  //       setCurrentUser(null);
-  //     } finally {
-  //       setLoadingUser(false);
-  //     }
-  //   };
-
-  //   fetchUser();
-  // }, []);
-
-
-  
-
   const handleLogout = () => {
     logout();
-    setCurrentUser(null);
+    // setCurrentUser(null);
     navigate("/login");
   };
 
@@ -90,9 +60,15 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link to="/" className="flex items-center space-x-2" onClick={closeAllMenus}>
+            <Link
+              to="/"
+              className="flex items-center space-x-2"
+              onClick={closeAllMenus}
+            >
               <BrainIcon className="h-10 w-10 text-cyan-400 animate-pulse" />
-              <span className="text-2xl font-bold text-white tracking-wider">QuizWhiz</span>
+              <span className="text-2xl font-bold text-white tracking-wider">
+                QuizWhiz
+              </span>
             </Link>
           </div>
 
@@ -113,7 +89,7 @@ export default function Navbar() {
             ))}
 
             {/* User Section */}
-            {user ?  (
+            {user ? (
               <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
@@ -154,7 +130,10 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="-mr-2 flex md:hidden">
+          <div className="-mr-2 flex md:hidden items-center space-x-2">
+            {user && (
+              <span className="text-white font-bold">{user.username}</span>
+            )}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               type="button"
@@ -164,19 +143,38 @@ export default function Navbar() {
             >
               <span className="sr-only">Open main menu</span>
               {isMobileMenuOpen ? (
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               ) : (
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                <svg
+                  className="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
                 </svg>
               )}
             </button>
           </div>
         </div>
       </div>
-
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
         <div className="md:hidden" id="mobile-menu" ref={mobileMenuRef}>
@@ -195,17 +193,24 @@ export default function Navbar() {
                 {link.text}
               </Link>
             ))}
+
             <div className="pt-4 mt-4 border-t border-gray-700">
-              {currentUser ? (
+              {user ? (
                 <div className="space-y-1">
                   <button
-                    onClick={() => { navigate("/profile"); setIsMobileMenuOpen(false); }}
+                    onClick={() => {
+                      navigate("/profile");
+                      setIsMobileMenuOpen(false);
+                    }}
                     className="block w-full text-left px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md"
                   >
                     Profile
                   </button>
                   <button
-                    onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }}
+                    onClick={() => {
+                      handleLogout();
+                      setIsMobileMenuOpen(false);
+                    }}
                     className="block w-full text-left px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white rounded-md"
                   >
                     Logout
@@ -225,6 +230,8 @@ export default function Navbar() {
           </div>
         </div>
       )}
+
+      {/* ✅ Key */}
     </nav>
   );
 }
