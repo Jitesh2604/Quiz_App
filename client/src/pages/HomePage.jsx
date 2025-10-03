@@ -98,8 +98,19 @@ export default function HomePage({ user }) {
     }
   };
 
-  if (loading) return <div className="text-white text-center mt-20">Loading...</div>;
-
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center text-center mt-20 space-y-4">
+      <div className="flex space-x-2" aria-label="Loading">
+        <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+        <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+        <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce"></div>
+      </div>
+      <p className="text-white text-lg">
+        Generating Categories with Gemini AI...
+      </p>
+    </div>
+  );
+  
   return (
     <div className="py-12 animate-fade-in">
       <div className="text-center mb-12">
