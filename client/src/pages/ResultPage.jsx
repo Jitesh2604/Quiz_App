@@ -1,39 +1,18 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { TrophyIcon, RefreshCwIcon } from "../components/Icons";
 import CelebrationEffect from "../components/CelebrationEffect";
 import { useLocation, useNavigate } from "react-router-dom";
-import { saveResult } from "../utils/api";
-import { useUser } from "../context/UserContext";
 
 export default function ResultPage() {
     const { state } = useLocation();
     const navigate = useNavigate();
-    const { user } = useUser();
 
     const { score = 0, total = 0, category = "Quiz" } = state || {};
-    const userId  = user?._id;
 
     const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
     const isPass = percentage >= 60;
     const strokeDashoffset = 283 - (283 * percentage) / 100;
 
-    useEffect(() => {
-        const save = async () => {
-            if (!userId) return;
-            try {
-                await saveResult({
-                    quizCategory: category,
-                    score: percentage,
-                    totalQuestions: total,
-                    correctAnswers: score,
-                  });
-                console.log("Result saved successfully");
-            } catch (err) {
-                console.log("Ener Saving Result", err);
-            }
-        };
-        save();
-    }, [score, total, category, userId]);
     
     const handlePlayAgain = () => {
         navigate("/", { replace: true });
