@@ -26,7 +26,7 @@ export default function HomePage() {
     const fetchCategories = async () => {
       try {
         const categoriesData = await getCategories();
-        console.log("category res:", categoriesData);
+        // console.log("category res:", categoriesData);
         setCategories(categoriesData);
       } catch (error) {
         console.error("Error fetching categories:", error);
