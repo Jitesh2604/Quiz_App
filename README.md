@@ -17,10 +17,10 @@
 </a>
 </div>
 
-A glimpse of the QuizWhiz interface in action.
+A glimpse of the Brain Teaser interface in action.
 
 ✨ **Core Features**  
-QuizWhiz isn't just another trivia app. It's a dynamic content platform built for endless engagement.
+Brain Teaser isn't just another trivia app. It's a dynamic content platform built for endless engagement.
 
 | Feature | Description | Icon |
 |---------|-------------|------|
@@ -39,7 +39,7 @@ This project is built with a modern, full-stack JavaScript architecture, designe
 | ![Tailwind CSS](https://skillicons.dev/icons?i=tailwind) Tailwind CSS | ![Express.js](https://skillicons.dev/icons?i=express) Express.js | ![JWT](https://skillicons.dev/icons?i=jwt) JWT | |
 
 🛠️ **Get It Running Locally**  
-Want to run QuizWhiz on your own machine? Follow these steps.
+Want to run Brain Teaser on your own machine? Follow these steps.
 
 **Clone the Repository**
 ```bash
