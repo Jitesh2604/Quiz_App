@@ -8,8 +8,8 @@ export default function QuizPage({ onFinishQuiz }) {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  // Questions and category from route state
-  const questions = useMemo(() => state?.questions || [], [state?.questions]);
+  // --- Store questions in state so page survives refresh ---
+  const [questions] = useState(() => state?.questions || []);
   const categoryName = useMemo(() => state?.categoryName || "Quiz", [state?.categoryName]);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -19,14 +19,16 @@ export default function QuizPage({ onFinishQuiz }) {
   const [timeLeft, setTimeLeft] = useState(30);
 
   const quizFinishedRef = useRef(false);
-  const currentQuestion = questions[currentQuestionIndex];
+  const currentQuestion = questions[currentQuestionIndex] || {};
 
-  // Redirect if no questions
+  // --- Redirect if no questions ---
   useEffect(() => {
-    if (questions.length === 0) navigate("/");
+    if (!questions || questions.length === 0) {
+      navigate("/");
+    }
   }, [questions, navigate]);
 
-  // Timer effect
+  // --- Timer effect ---
   useEffect(() => {
     if (isAnswered || quizFinishedRef.current) return;
 
@@ -39,7 +41,7 @@ export default function QuizPage({ onFinishQuiz }) {
     return () => clearTimeout(timer);
   }, [timeLeft, isAnswered, currentQuestionIndex]);
 
-  // Handle answer selection
+  // --- Handle answer selection ---
   const handleAnswerClick = (option) => {
     if (isAnswered) return;
 
@@ -51,9 +53,9 @@ export default function QuizPage({ onFinishQuiz }) {
     }
   };
 
-  // Handle next question or finish quiz
+  // --- Handle next question or finish quiz ---
   const handleNextQuestion = async () => {
-    if (quizFinishedRef.current) return; // Prevent double call
+    if (quizFinishedRef.current) return;
 
     // If last question, finish quiz
     if (currentQuestionIndex >= questions.length - 1) {
@@ -62,7 +64,7 @@ export default function QuizPage({ onFinishQuiz }) {
       if (user) {
         try {
           await saveResult({
-            user: user.id,
+            user: user._id || user.id,
             quizCategory: categoryName,
             score,
             totalQuestions: questions.length,
@@ -94,6 +96,7 @@ export default function QuizPage({ onFinishQuiz }) {
     setTimeLeft(30);
   };
 
+  // --- Button styling ---
   const getButtonClass = (option) => {
     if (!isAnswered) return "bg-gray-700 hover:bg-gray-600";
     if (option === currentQuestion.correctAnswer) return "bg-green-500 animate-pulse-correct";
@@ -101,7 +104,7 @@ export default function QuizPage({ onFinishQuiz }) {
     return "bg-gray-700 opacity-50";
   };
 
-  if (questions.length === 0) return null;
+  if (!questions || questions.length === 0) return null;
 
   return (
     <div className="max-w-3xl mx-auto py-8 animate-fade-in">
@@ -122,19 +125,25 @@ export default function QuizPage({ onFinishQuiz }) {
           </div>
         </div>
 
-        <h2 className="text-3xl font-bold text-white mb-6">{currentQuestion.question}</h2>
+        <h2 className="text-3xl font-bold text-white mb-6">
+          {currentQuestion?.question || "Loading question..."}
+        </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {currentQuestion.options.map((option, index) => (
-            <button
-              key={index}
-              onClick={() => handleAnswerClick(option)}
-              disabled={isAnswered}
-              className={`p-4 rounded-lg text-left text-lg font-medium transition-all duration-300 transform hover:scale-105 ${getButtonClass(option)}`}
-            >
-              {option}
-            </button>
-          ))}
+          {currentQuestion?.options?.length > 0 ? (
+            currentQuestion.options.map((option, index) => (
+              <button
+                key={index}
+                onClick={() => handleAnswerClick(option)}
+                disabled={isAnswered}
+                className={`p-4 rounded-lg text-left text-lg font-medium transition-all duration-300 transform hover:scale-105 ${getButtonClass(option)}`}
+              >
+                {option}
+              </button>
+            ))
+          ) : (
+            <p className="text-gray-400">Loading options...</p>
+          )}
         </div>
 
         {isAnswered && (

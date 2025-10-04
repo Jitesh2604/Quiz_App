@@ -4,7 +4,6 @@ import {
   getCategories,
   getUserResults,
   getQuestions,
-  // fetchUser,
 } from "../utils/api";
 import QuestionCountModal from "../components/QuestionCountModal";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +15,6 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
-  // const [currentUser, setCurrentUser] = useState(null);
 
   const { user } = useUser();
   const navigate = useNavigate();
@@ -26,7 +24,6 @@ export default function HomePage() {
     const fetchCategories = async () => {
       try {
         const categoriesData = await getCategories();
-        // console.log("category res:", categoriesData);
         setCategories(categoriesData);
       } catch (error) {
         console.error("Error fetching categories:", error);
@@ -133,7 +130,7 @@ export default function HomePage() {
       {showModal && (
         <QuestionCountModal
           category={selectedCategory}
-          onClose={() => setShowModal(false)}
+          onCancel={() => setShowModal(false)}
           onStart={handleQuestionSelect}
         />
       )}

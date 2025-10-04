@@ -1,6 +1,6 @@
 import React from "react";
 import { TrophyIcon, RefreshCwIcon } from "../components/Icons";
-import CelebrationEffect from "../components/CelebrationEffect";
+import { CelebrationEffect } from "../components/CelebrationEffect";
 import { useLocation, useNavigate } from "react-router-dom";
 
 export default function ResultPage() {
@@ -10,7 +10,7 @@ export default function ResultPage() {
     const { score = 0, total = 0, category = "Quiz" } = state || {};
 
     const percentage = total > 0 ? Math.round((score / total) * 100) : 0;
-    const isPass = percentage >= 60;
+    const isPass = percentage >= 0;
     const strokeDashoffset = 283 - (283 * percentage) / 100;
 
     

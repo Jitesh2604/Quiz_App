@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: 'https://quiz-app-server-5x9h.onrender.com/api',
+    baseURL: 'http://localhost:8000/api',
     headers: {
         "Content-Type": "application/json",
     },
@@ -20,8 +20,16 @@ API.interceptors.request.use((config) => {
 // ============================
 export const fetchUser = async () => {
   try {
-    const res = await API.get("/auth/me");
-    return res.data; 
+    const token = localStorage.getItem("token");
+    if (!token) throw new Error("No token found");
+
+    const res = await API.get("/auth/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data;
   } catch (err) {
     console.error("Error fetching user:", err);
     throw err;
