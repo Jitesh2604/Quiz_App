@@ -23,7 +23,7 @@ export default function ProfilePage() {
         // ✅ Fetch this user's quiz results
         if (userData?._id) {
           const res = await getUserResults();
-          console.log(res);
+          // console.log(res);
           
           setResults(res);
         }
