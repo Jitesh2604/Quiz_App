@@ -4,7 +4,7 @@ import {
   getCategories,
   getUserResults,
   getQuestions,
-  fetchUser,
+  // fetchUser,
 } from "../utils/api";
 import QuestionCountModal from "../components/QuestionCountModal";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +16,7 @@ export default function HomePage() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [currentUser, setCurrentUser] = useState(null);
+  // const [currentUser, setCurrentUser] = useState(null);
 
   const { user } = useUser();
   const navigate = useNavigate();
@@ -50,23 +50,6 @@ export default function HomePage() {
       }
     };
     fetchResults();
-  }, [user]);
-
-  // --- Fetch Current User ---
-  useEffect(() => {
-    if (!user) return;
-
-    const getUser = async () => {
-      try {
-        const userData = await fetchUser();         
-        setCurrentUser(userData);
-      } catch (err) {
-        console.error("Error fetching user:", err);
-        setCurrentUser(null);
-      }
-    };
-
-    getUser();
   }, [user]);
 
   // --- Handle Category Click ---
@@ -117,7 +100,7 @@ export default function HomePage() {
     <div className="py-12 animate-fade-in">
       <div className="text-center mb-12">
         <h1 className="text-5xl font-extrabold text-white">
-          Welcome, {currentUser?.username || "Player"}!
+          Welcome, {user?.username || "Player"}!
         </h1>
         {lastResult ? (
           <p className="mt-4 text-lg text-yellow-400">

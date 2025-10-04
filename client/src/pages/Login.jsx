@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import { MailIcon, LockIcon } from "../components/Icons";
 import API from "../utils/api";
 import { useNavigate } from "react-router-dom";
+import { useUser } from "../context/UserContext";
+import jwtDecode from "jwt-decode";
+
 
 export default function LoginPage() {
   const navigate = useNavigate();
+  const { setUser } = useUser();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -22,10 +26,14 @@ export default function LoginPage() {
     try {
       const res = await API.post("/auth/login", formData);
 
-      localStorage.setItem("token", res.data.token);
+      let token = res.data.token;
+      localStorage.setItem("token", token);
+
+      const decodedUser = jwtDecode(token); 
+      setUser(decodedUser); 
 
       setMessage("Login successful! Redirecting...");
-      console.log("User logged in:", res.data);
+      // console.log("User logged in:", res.data);
 
       setTimeout(() => navigate("/"), 1500);
     } catch (err) {
