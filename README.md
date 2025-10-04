@@ -79,7 +79,7 @@ The app will be available at http://localhost:3000.
 Deployed Links
 
 Backend: [Render](https://quiz-app-server-5x9h.onrender.com/)
-Frontend: [Vercel](https://quiz-app-azure-rho.vercel.app/)
+Frontend: [Vercel](quiz-app-azure-rho.vercel.app/)
 
  ```
 <div align="center"> <p>Developed with ❤️ by <a href="https://github.com/Jitesh2604">Jitesh</a></p> </div>
