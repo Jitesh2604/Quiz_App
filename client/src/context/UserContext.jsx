@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect} from "react";
 // The fix is on the next line:
-import { jwtDecode } from "jwt-decode"; 
+import jwtDecode from "jwt-decode"; 
 
 const UserContext = createContext();
 
