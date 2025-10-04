@@ -22,9 +22,9 @@ export const signup = async (req, res) => {
         });
 
         await user.save();
-        res.status(201).json({ message: "USer registerd successfully" });
+        res.status(201).json({ message: "User registerd successfully" });
     } catch (err) {
-        res.status(500).json({ message: "Server error", err });
+        res.status(500).json({ message: "Server error", error: err.message });
     }
 };
 
