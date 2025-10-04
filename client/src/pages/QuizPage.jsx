@@ -26,18 +26,10 @@ export default function QuizPage({ onFinishQuiz }) {
   useEffect(() => {
     if (!questions || questions.length === 0) {
       navigate("/");
+    } else {
+      setLoadingQuestion(false); // Questions already exist
     }
   }, [questions, navigate]);
-
-  // --- Wait until question options are ready ---
-  useEffect(() => {
-    if (currentQuestion?.options?.length > 0) {
-      setLoadingQuestion(false);
-      setTimeLeft(60); // Reset timer when question is ready
-    } else {
-      setLoadingQuestion(true);
-    }
-  }, [currentQuestion]);
 
   // --- Timer effect ---
   useEffect(() => {
@@ -68,7 +60,6 @@ export default function QuizPage({ onFinishQuiz }) {
   const handleNextQuestion = async () => {
     if (quizFinishedRef.current) return;
 
-    // If last question, finish quiz
     if (currentQuestionIndex >= questions.length - 1) {
       quizFinishedRef.current = true;
 
@@ -100,11 +91,11 @@ export default function QuizPage({ onFinishQuiz }) {
       return;
     }
 
-    // Move to next question
     setCurrentQuestionIndex((prev) => prev + 1);
     setIsAnswered(false);
     setSelectedAnswer(null);
-    setLoadingQuestion(true); // Wait until new question is ready
+    setLoadingQuestion(false); // question is ready immediately
+    setTimeLeft(60);
   };
 
   // --- Button styling ---
@@ -140,14 +131,12 @@ export default function QuizPage({ onFinishQuiz }) {
 
         {/* Question */}
         <h2 className="text-3xl font-bold text-white mb-6">
-          {loadingQuestion ? "Loading question..." : currentQuestion.question}
+          {currentQuestion?.question || "Loading question..."}
         </h2>
 
         {/* Options */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {loadingQuestion ? (
-            <p className="text-gray-400">Loading options...</p>
-          ) : (
+          {currentQuestion?.options?.length > 0 ? (
             currentQuestion.options.map((option, index) => (
               <button
                 key={index}
@@ -158,11 +147,13 @@ export default function QuizPage({ onFinishQuiz }) {
                 {option}
               </button>
             ))
+          ) : (
+            <p className="text-gray-400">Loading options...</p>
           )}
         </div>
 
         {/* Next / Finish Button */}
-        {isAnswered && !loadingQuestion && (
+        {isAnswered && (
           <div className="mt-6 text-center">
             <button
               onClick={handleNextQuestion}
