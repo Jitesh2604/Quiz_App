@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { saveResult } from "../utils/api";
@@ -8,11 +8,9 @@ export default function QuizPage({ onFinishQuiz }) {
   const { state } = useLocation();
   const navigate = useNavigate();
 
+  // Questions and category from route state
   const questions = useMemo(() => state?.questions || [], [state?.questions]);
-  const categoryName = useMemo(
-    () => state?.categoryName || "Quiz",
-    [state?.categoryName]
-  );
+  const categoryName = useMemo(() => state?.categoryName || "Quiz", [state?.categoryName]);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
@@ -20,29 +18,28 @@ export default function QuizPage({ onFinishQuiz }) {
   const [isAnswered, setIsAnswered] = useState(false);
   const [timeLeft, setTimeLeft] = useState(30);
 
+  const quizFinishedRef = useRef(false);
   const currentQuestion = questions[currentQuestionIndex];
 
+  // Redirect if no questions
   useEffect(() => {
-    if (questions.length === 0) {
-      navigate("/");
-    }
+    if (questions.length === 0) navigate("/");
   }, [questions, navigate]);
 
+  // Timer effect
   useEffect(() => {
-    if (isAnswered) return;
+    if (isAnswered || quizFinishedRef.current) return;
 
     if (timeLeft === 0) {
       handleNextQuestion();
       return;
     }
 
-    const timer = setTimeout(() => {
-      setTimeLeft((prev) => prev - 1);
-    }, 1000);
-
+    const timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
     return () => clearTimeout(timer);
-  }, [timeLeft, isAnswered]);
+  }, [timeLeft, isAnswered, currentQuestionIndex]);
 
+  // Handle answer selection
   const handleAnswerClick = (option) => {
     if (isAnswered) return;
 
@@ -54,47 +51,52 @@ export default function QuizPage({ onFinishQuiz }) {
     }
   };
 
+  // Handle next question or finish quiz
   const handleNextQuestion = async () => {
-    setIsAnswered(false);
-    setSelectedAnswer(null);
-    setTimeLeft(30);
+    if (quizFinishedRef.current) return; // Prevent double call
 
-    if (currentQuestionIndex < questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
+    // If last question, finish quiz
+    if (currentQuestionIndex >= questions.length - 1) {
+      quizFinishedRef.current = true;
+
+      if (user) {
+        try {
+          await saveResult({
+            user: user.id,
+            quizCategory: categoryName,
+            score,
+            totalQuestions: questions.length,
+            correctAnswers: score,
+          });
+        } catch (err) {
+          console.log("Error saving result:", err);
+        }
+      }
+
+      if (onFinishQuiz) onFinishQuiz(score, questions.length);
+
+      navigate("/results", {
+        state: {
+          score,
+          total: questions.length,
+          category: categoryName,
+          userId: user._id,
+        },
+      });
+
       return;
     }
 
-    if (user) {
-      // console.log(user);
-      try {
-        await saveResult({
-          user: user.id,
-          quizCategory: categoryName,
-          score: score,
-          totalQuestions: questions.length,
-          correctAnswers: score,
-        });
-      } catch (err) {
-        console.log("Error saving result:", err);
-      }
-    }
-
-    if (onFinishQuiz) onFinishQuiz(score, questions.length);
-
-    navigate("/results", {
-      state: {
-        score,
-        total: questions.length,
-        category: categoryName,
-        userId: user._id,
-      },
-    });
+    // Move to next question
+    setCurrentQuestionIndex((prev) => prev + 1);
+    setIsAnswered(false);
+    setSelectedAnswer(null);
+    setTimeLeft(30);
   };
 
   const getButtonClass = (option) => {
     if (!isAnswered) return "bg-gray-700 hover:bg-gray-600";
-    if (option === currentQuestion.correctAnswer)
-      return "bg-green-500 animate-pulse-correct";
+    if (option === currentQuestion.correctAnswer) return "bg-green-500 animate-pulse-correct";
     if (option === selectedAnswer) return "bg-red-500";
     return "bg-gray-700 opacity-50";
   };
@@ -107,6 +109,7 @@ export default function QuizPage({ onFinishQuiz }) {
         <div className="mb-4 text-center text-xl font-bold text-yellow-400">
           Time Left: {timeLeft}s
         </div>
+
         <div className="mb-6">
           <p className="text-lg text-gray-400">
             Question {currentQuestionIndex + 1} of {questions.length}
@@ -114,40 +117,33 @@ export default function QuizPage({ onFinishQuiz }) {
           <div className="w-full bg-gray-700 rounded-full h-2.5 mt-2">
             <div
               className="bg-cyan-500 h-2.5 rounded-full transition-all duration-500"
-              style={{
-                width: `${
-                  ((currentQuestionIndex + 1) / questions.length) * 100
-                }%`,
-              }}
+              style={{ width: `${((currentQuestionIndex + 1) / questions.length) * 100}%` }}
             ></div>
           </div>
         </div>
-        <h2 className="text-3xl font-bold text-white mb-6">
-          {currentQuestion.question}
-        </h2>
+
+        <h2 className="text-3xl font-bold text-white mb-6">{currentQuestion.question}</h2>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {currentQuestion.options.map((option, index) => (
             <button
               key={index}
               onClick={() => handleAnswerClick(option)}
               disabled={isAnswered}
-              className={`p-4 rounded-lg text-left text-lg font-medium transition-all duration-300 transform hover:scale-105 ${getButtonClass(
-                option
-              )}`}
+              className={`p-4 rounded-lg text-left text-lg font-medium transition-all duration-300 transform hover:scale-105 ${getButtonClass(option)}`}
             >
               {option}
             </button>
           ))}
         </div>
+
         {isAnswered && (
           <div className="mt-6 text-center">
             <button
               onClick={handleNextQuestion}
               className="w-full md:w-auto py-3 px-8 font-bold text-white bg-gradient-to-r from-cyan-500 to-blue-500 rounded-lg hover:from-cyan-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-cyan-500 shadow-lg transform hover:-translate-y-1 transition-all duration-300"
             >
-              {currentQuestionIndex < questions.length - 1
-                ? "Next Question"
-                : "Finish Quiz"}
+              {currentQuestionIndex < questions.length - 1 ? "Next Question" : "Finish Quiz"}
             </button>
           </div>
         )}
