@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { saveResult } from "../utils/api";
@@ -8,27 +8,31 @@ export default function QuizPage({ onFinishQuiz }) {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  // --- Questions and category ---
-  const [questions] = useState(state?.questions || []);
-  const categoryName = state?.categoryName || "Quiz";
+  const [loading, setLoading] = useState(true);
+
+  // --- Store questions in state so page survives refresh ---
+  const [questions, setQuestions] = useState(() => {
+    const q = state?.questions;
+    if (!q) return [];
+    return Array.isArray(q) ? q : [q];
+  });
+
+  const categoryName = useMemo(() => state?.categoryName || "Quiz", [state?.categoryName]);
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [timeLeft, setTimeLeft] = useState(30);
-  const [loading, setLoading] = useState(!questions || questions.length === 0);
 
   const quizFinishedRef = useRef(false);
+
   const currentQuestion = questions[currentQuestionIndex] || {};
 
-  // --- Redirect if no questions ---
+  // --- Set loading false when questions are ready ---
   useEffect(() => {
-    if (!questions || questions.length === 0) {
-      navigate("/");
-    } else {
-      setLoading(false);
-    }
+    if (questions.length > 0) setLoading(false);
+    else navigate("/");
   }, [questions, navigate]);
 
   // --- Timer effect ---
@@ -46,7 +50,7 @@ export default function QuizPage({ onFinishQuiz }) {
 
   // --- Handle answer selection ---
   const handleAnswerClick = (option) => {
-    if (isAnswered || loading) return;
+    if (isAnswered) return;
 
     setSelectedAnswer(option);
     setIsAnswered(true);
@@ -91,6 +95,7 @@ export default function QuizPage({ onFinishQuiz }) {
       return;
     }
 
+    // Move to next question
     setCurrentQuestionIndex((prev) => prev + 1);
     setIsAnswered(false);
     setSelectedAnswer(null);
