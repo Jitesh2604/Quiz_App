@@ -11,7 +11,7 @@ export default function QuizPage({ onFinishQuiz }) {
   const [loading, setLoading] = useState(true);
 
   // --- Store questions in state so page survives refresh ---
-  const [questions, setQuestions] = useState(() => {
+  const [questions] = useState(() => {
     const q = state?.questions;
     if (!q) return [];
     return Array.isArray(q) ? q : [q];
