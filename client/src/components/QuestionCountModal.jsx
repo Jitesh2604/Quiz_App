@@ -31,7 +31,7 @@ export default function QuestionCountModal({ category, onStart, onCancel }) {
               <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce"></div>
             </div>
             <p className="text-white text-lg">
-              Generating Categories with Gemini AI...
+              Generating Questions with Gemini AI...
             </p>
           </div>
         ) : (
