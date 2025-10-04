@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useUser } from "../context/UserContext";
 import { saveResult } from "../utils/api";
@@ -8,16 +8,16 @@ export default function QuizPage({ onFinishQuiz }) {
   const { state } = useLocation();
   const navigate = useNavigate();
 
-  // --- Store questions in state so page survives refresh ---
-  const [questions] = useState(() => state?.questions || []);
-  const categoryName = useMemo(() => state?.categoryName || "Quiz", [state?.categoryName]);
+  // --- Questions and category ---
+  const [questions] = useState(state?.questions || []);
+  const categoryName = state?.categoryName || "Quiz";
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60);
-  const [loadingQuestion, setLoadingQuestion] = useState(true);
+  const [timeLeft, setTimeLeft] = useState(30);
+  const [loading, setLoading] = useState(!questions || questions.length === 0);
 
   const quizFinishedRef = useRef(false);
   const currentQuestion = questions[currentQuestionIndex] || {};
@@ -27,13 +27,13 @@ export default function QuizPage({ onFinishQuiz }) {
     if (!questions || questions.length === 0) {
       navigate("/");
     } else {
-      setLoadingQuestion(false); // Questions already exist
+      setLoading(false);
     }
   }, [questions, navigate]);
 
   // --- Timer effect ---
   useEffect(() => {
-    if (isAnswered || quizFinishedRef.current || loadingQuestion) return;
+    if (loading || isAnswered || quizFinishedRef.current) return;
 
     if (timeLeft === 0) {
       handleNextQuestion();
@@ -42,11 +42,11 @@ export default function QuizPage({ onFinishQuiz }) {
 
     const timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
     return () => clearTimeout(timer);
-  }, [timeLeft, isAnswered, currentQuestionIndex, loadingQuestion]);
+  }, [timeLeft, isAnswered, loading, currentQuestionIndex]);
 
   // --- Handle answer selection ---
   const handleAnswerClick = (option) => {
-    if (isAnswered) return;
+    if (isAnswered || loading) return;
 
     setSelectedAnswer(option);
     setIsAnswered(true);
@@ -94,8 +94,7 @@ export default function QuizPage({ onFinishQuiz }) {
     setCurrentQuestionIndex((prev) => prev + 1);
     setIsAnswered(false);
     setSelectedAnswer(null);
-    setLoadingQuestion(false); // question is ready immediately
-    setTimeLeft(60);
+    setTimeLeft(30);
   };
 
   // --- Button styling ---
@@ -106,17 +105,26 @@ export default function QuizPage({ onFinishQuiz }) {
     return "bg-gray-700 opacity-50";
   };
 
-  if (!questions || questions.length === 0) return null;
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center text-center mt-20 space-y-4">
+        <div className="flex space-x-2" aria-label="Loading">
+          <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+          <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+          <div className="w-3 h-3 bg-cyan-400 rounded-full animate-bounce"></div>
+        </div>
+        <p className="text-white text-lg">Loading questions...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-3xl mx-auto py-8 animate-fade-in">
       <div className="bg-gray-800/60 backdrop-blur-xl p-8 rounded-2xl shadow-2xl border border-gray-700">
-        {/* Timer */}
         <div className="mb-4 text-center text-xl font-bold text-yellow-400">
           Time Left: {timeLeft}s
         </div>
 
-        {/* Progress */}
         <div className="mb-6">
           <p className="text-lg text-gray-400">
             Question {currentQuestionIndex + 1} of {questions.length}
@@ -129,12 +137,10 @@ export default function QuizPage({ onFinishQuiz }) {
           </div>
         </div>
 
-        {/* Question */}
         <h2 className="text-3xl font-bold text-white mb-6">
           {currentQuestion?.question || "Loading question..."}
         </h2>
 
-        {/* Options */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {currentQuestion?.options?.length > 0 ? (
             currentQuestion.options.map((option, index) => (
@@ -152,7 +158,6 @@ export default function QuizPage({ onFinishQuiz }) {
           )}
         </div>
 
-        {/* Next / Finish Button */}
         {isAnswered && (
           <div className="mt-6 text-center">
             <button
