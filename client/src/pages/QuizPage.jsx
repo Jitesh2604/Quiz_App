@@ -93,7 +93,7 @@ export default function QuizPage({ onFinishQuiz }) {
     setCurrentQuestionIndex((prev) => prev + 1);
     setIsAnswered(false);
     setSelectedAnswer(null);
-    setTimeLeft(30);
+    setTimeLeft(60);
   };
 
   // --- Button styling ---
