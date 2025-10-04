@@ -130,17 +130,17 @@ export default function HomePage() {
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mx-15">
         {categories.map((category) => {
           const { Icon, color } = getCategoryIcon(category.name);
           return (
             <div
               key={category.name}
               onClick={() => handleCategoryClick(category)}
-              className="cursor-pointer bg-gray-800/60 backdrop-blur-xl p-8 rounded-2xl shadow-lg border border-gray-700 text-center transform transition-all duration-300 hover:scale-105 hover:border-cyan-500 hover:shadow-2xl"
+              className="cursor-pointer bg-purple-900 backdrop-blur-xl p-8 rounded-2xl shadow-lg border border-gray-700 text-center transform transition-all duration-300 hover:scale-105 hover:border-cyan-500 hover:shadow-2xl"
             >
               <Icon className={`h-16 w-16 mx-auto mb-4 ${color}`} />
-              <h3 className="text-2xl font-bold text-white">{category.name}</h3>
+              <h3 className="text-2xl font-bold text-rose-400">{category.name}</h3>
               <p className="text-gray-400 mt-2">{category.description}</p>
             </div>
           );
