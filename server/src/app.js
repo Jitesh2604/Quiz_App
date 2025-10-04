@@ -11,8 +11,13 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
 app.use(express.json());
+app.use(
+    cors({
+      origin: "https://quiz-app-azure-rho.vercel.app",
+      credentials: true,
+    })
+  );
 
 app.get("/", (req, res) => {
     res.send("Quiz App Backend Running");
