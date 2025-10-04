@@ -45,7 +45,7 @@ export default function AboutPage() {
     return (
         <div className="py-12 animate-fade-in text-white">
             <div className="text-center mb-16">
-                <h1 className="text-5xl font-extrabold text-white">About QuizWhiz</h1>
+                <h1 className="text-5xl font-extrabold text-white">About Brain Teaser</h1>
                 <p className="mt-4 text-lg text-gray-400 max-w-3xl mx-auto">
                     An intelligent quiz application designed to provide a dynamic and ever-changing trivia experience.
                 </p>
