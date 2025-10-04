@@ -8,6 +8,7 @@ export default function QuizPage({ onFinishQuiz }) {
   const { state } = useLocation();
   const navigate = useNavigate();
 
+  // --- Store questions in state so page survives refresh ---
   const [questions] = useState(() => state?.questions || []);
   const categoryName = useMemo(() => state?.categoryName || "Quiz", [state?.categoryName]);
 
@@ -15,19 +16,32 @@ export default function QuizPage({ onFinishQuiz }) {
   const [score, setScore] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(60); 
+  const [timeLeft, setTimeLeft] = useState(60);
+  const [loadingQuestion, setLoadingQuestion] = useState(true);
 
   const quizFinishedRef = useRef(false);
   const currentQuestion = questions[currentQuestionIndex] || {};
 
+  // --- Redirect if no questions ---
   useEffect(() => {
     if (!questions || questions.length === 0) {
       navigate("/");
     }
   }, [questions, navigate]);
 
+  // --- Wait until question options are ready ---
   useEffect(() => {
-    if (isAnswered || quizFinishedRef.current) return;
+    if (currentQuestion?.options?.length > 0) {
+      setLoadingQuestion(false);
+      setTimeLeft(60); // Reset timer when question is ready
+    } else {
+      setLoadingQuestion(true);
+    }
+  }, [currentQuestion]);
+
+  // --- Timer effect ---
+  useEffect(() => {
+    if (isAnswered || quizFinishedRef.current || loadingQuestion) return;
 
     if (timeLeft === 0) {
       handleNextQuestion();
@@ -36,7 +50,7 @@ export default function QuizPage({ onFinishQuiz }) {
 
     const timer = setTimeout(() => setTimeLeft((prev) => prev - 1), 1000);
     return () => clearTimeout(timer);
-  }, [timeLeft, isAnswered, currentQuestionIndex]);
+  }, [timeLeft, isAnswered, currentQuestionIndex, loadingQuestion]);
 
   // --- Handle answer selection ---
   const handleAnswerClick = (option) => {
@@ -50,9 +64,11 @@ export default function QuizPage({ onFinishQuiz }) {
     }
   };
 
+  // --- Handle next question or finish quiz ---
   const handleNextQuestion = async () => {
     if (quizFinishedRef.current) return;
 
+    // If last question, finish quiz
     if (currentQuestionIndex >= questions.length - 1) {
       quizFinishedRef.current = true;
 
@@ -84,13 +100,14 @@ export default function QuizPage({ onFinishQuiz }) {
       return;
     }
 
+    // Move to next question
     setCurrentQuestionIndex((prev) => prev + 1);
     setIsAnswered(false);
     setSelectedAnswer(null);
-    setTimeLeft(60); 
+    setLoadingQuestion(true); // Wait until new question is ready
   };
 
-  
+  // --- Button styling ---
   const getButtonClass = (option) => {
     if (!isAnswered) return "bg-gray-700 hover:bg-gray-600";
     if (option === currentQuestion.correctAnswer) return "bg-green-500 animate-pulse-correct";
@@ -123,12 +140,14 @@ export default function QuizPage({ onFinishQuiz }) {
 
         {/* Question */}
         <h2 className="text-3xl font-bold text-white mb-6">
-          {currentQuestion?.question || "Loading question..."}
+          {loadingQuestion ? "Loading question..." : currentQuestion.question}
         </h2>
 
         {/* Options */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {currentQuestion?.options?.length > 0 ? (
+          {loadingQuestion ? (
+            <p className="text-gray-400">Loading options...</p>
+          ) : (
             currentQuestion.options.map((option, index) => (
               <button
                 key={index}
@@ -139,13 +158,11 @@ export default function QuizPage({ onFinishQuiz }) {
                 {option}
               </button>
             ))
-          ) : (
-            <p className="text-gray-400">Loading options...</p>
           )}
         </div>
 
         {/* Next / Finish Button */}
-        {isAnswered && (
+        {isAnswered && !loadingQuestion && (
           <div className="mt-6 text-center">
             <button
               onClick={handleNextQuestion}
